@@ -10,7 +10,8 @@ export default function Jobs() {
   const { currentJobs, showBookMarked } = useJobs();
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [job, setJob] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const handleJobChange = (e) => {
     setJob(e.target.value);
   };
@@ -27,28 +28,35 @@ export default function Jobs() {
   };
 
   useEffect(() => {
-    const savedJobs = JSON.parse(localStorage.getItem("jobs"));
-    if (savedJobs) {
-      setFilteredJobs(savedJobs);
-    } else {
-      setFilteredJobs(currentJobs);
-    }
-  }, [currentJobs]);
+    setLoading(true);
+    setError("");
 
-  useEffect(() => {
-    const filtered = currentJobs.filter(
-      (jobItem) =>
-        (!job || jobItem.title.toLowerCase().includes(job.toLowerCase())) &&
-        (!location ||
-          jobItem.location.toLowerCase().includes(location.toLowerCase())) &&
-        (!showBookMarked || jobItem.isBookmarked)
-    );
-    setFilteredJobs(filtered);
+    const savedJobs = JSON.parse(localStorage.getItem("jobs"));
+    const jobsToDisplay = savedJobs || currentJobs;
+
+    try {
+      const filtered = jobsToDisplay.filter(
+        (jobItem) =>
+          (!job || jobItem.title.toLowerCase().includes(job.toLowerCase())) &&
+          (!location ||
+            jobItem.location.toLowerCase().includes(location.toLowerCase())) &&
+          (!showBookMarked || jobItem.isBookmarked)
+      );
+      setFilteredJobs(filtered);
+    } catch (error) {
+      setError("An error occurred while filtering jobs.");
+    } finally {
+      const timeoutId = setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
+    }
   }, [job, location, currentJobs, showBookMarked]);
 
   return (
     <div className="min-h-screen">
-      <div className="search-container flex justify-start  pl-2 flex-nowrap border-2 w-full mt-8 max-w-3xl ml-36 space-x-4 p-1 rounded-sm">
+      <div className="search-container flex justify-start pl-2 flex-nowrap border-2 w-full mt-8 max-w-3xl ml-36 space-x-4 p-1 rounded-sm">
         <SearchJob job={job} onJobChange={handleJobChange} />
         <SearchLocation
           location={location}
@@ -60,7 +68,21 @@ export default function Jobs() {
         </button>
       </div>
 
-      <JobList filteredJobs={filteredJobs} handleBookmark={handleBookmark} />
+      {loading && (
+        <div className="flex justify-center mt-8">
+          <div className="animate-spin rounded-full border-t-4 border-blue-500 w-16 h-16"></div>{" "}
+        </div>
+      )}
+
+      {error && (
+        <div className="text-red-500 text-center mt-8">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && (
+        <JobList filteredJobs={filteredJobs} handleBookmark={handleBookmark} />
+      )}
     </div>
   );
 }
