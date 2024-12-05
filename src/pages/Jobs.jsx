@@ -7,7 +7,7 @@ import { FaLocationArrow } from "react-icons/fa";
 
 export default function Jobs() {
   const [location, setLocation] = useState("");
-  const { currentJobs, showBookMarked, setShowBookMarked } = useJobs();
+  const { currentJobs, showBookMarked } = useJobs();
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [job, setJob] = useState("");
 
