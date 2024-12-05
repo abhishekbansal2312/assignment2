@@ -8,7 +8,7 @@ export default function JobList({ filteredJobs, handleBookmark }) {
           {filteredJobs.map((jobItem, index) => (
             <div
               key={index}
-              className="border p-4 rounded shadow flex flex-col"
+              className="border p-4 rounded shadow flex flex-col transition duration-300 ease-in-out transform  hover:bg-gradient-to-r hover:from-orange-200 hover:to-white"
             >
               <h3 className="text-lg font-arial">{jobItem.title}</h3>
 

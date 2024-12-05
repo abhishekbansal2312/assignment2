@@ -23,13 +23,10 @@ export default function Jobs() {
     const updatedJobs = [...filteredJobs];
     updatedJobs[index].isBookmarked = !updatedJobs[index].isBookmarked;
     setFilteredJobs(updatedJobs);
-
-    // Update localStorage with the latest job list
     localStorage.setItem("jobs", JSON.stringify(updatedJobs));
   };
 
   useEffect(() => {
-    // Retrieve jobs from localStorage if available
     const savedJobs = JSON.parse(localStorage.getItem("jobs"));
     if (savedJobs) {
       setFilteredJobs(savedJobs);

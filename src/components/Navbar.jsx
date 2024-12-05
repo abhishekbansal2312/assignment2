@@ -1,5 +1,6 @@
 import React from "react";
 import { useJobs } from "../context/JobsProvider";
+import { FaBriefcase } from "react-icons/fa";
 
 export default function Navbar() {
   const { showBookMarked, setShowBookMarked } = useJobs();
@@ -7,7 +8,10 @@ export default function Navbar() {
     <div>
       <nav className="bg-gray-100">
         <div className="mx-auto max-w-5xl flex justify-between items-center py-2 px-6">
-          <div className="text-xl font-bold ">Explorin Solution</div>
+          <div className="flex gap-2">
+            <FaBriefcase size={24} color="orange" />
+            <div className="text-xl font-bold ">Explorin Solution</div>
+          </div>
 
           <div className="flex items-center gap-6">
             <button
